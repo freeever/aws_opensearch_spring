@@ -1,4 +1,4 @@
-package com.aws.opensearch.spring;
+package com.aws.opensearch.spring.model;
 
 import java.io.Serializable;
 

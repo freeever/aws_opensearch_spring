@@ -34,7 +34,7 @@ public class OpenSearchConfig {
     @Bean
     public CredentialsProvider credentialsProvider() {
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        credentialsProvider.setCredentials(AuthScope.ANY.ANY, new UsernamePasswordCredentials(username, password));
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
 
         return credentialsProvider;
     }
