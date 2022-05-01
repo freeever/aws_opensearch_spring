@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  spring-app:
+    image: 'freeever/aws_opensearch_spring'
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: aws_opensearch_spring
+    ports:
+      - 8080:5000
