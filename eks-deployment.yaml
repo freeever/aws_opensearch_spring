@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aws-opensearch-spring-deployment
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: aws-opensearch-spring
+  template:
+    metadata:
+      labels:
+        app: aws-opensearch-spring
+    spec:
+      containers:
+        - name: back-end
+          image: 536819516703.dkr.ecr.ca-central-1.amazonaws.com/aws-opensearch-spring:latest
+          ports:
+            - containerPort: 5000
