@@ -53,6 +53,13 @@ public class OpenSearchDemoService <T extends BaseDocument> {
         this.objectMapper = objectMapper;
     }
 
+    public List<BaseDocument> findAllDocuments(String indexName) throws IOException {
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder.query(QueryBuilders.matchAllQuery());
+
+        return this.searchDocuments(indexName, sourceBuilder, this.getIndexClass(indexName));
+    }
+
     /**
      * Search Abandoned Mine by its own ID, which comes from original on prem database
      * @param oriId
@@ -116,24 +123,31 @@ public class OpenSearchDemoService <T extends BaseDocument> {
      */
     private <T extends BaseDocument> BaseDocument findGeoDocumentByOriId(String oriId, String indexName, Class<T> type)
             throws IOException {
-        SearchRequest searchRequest = new SearchRequest(indexName);
-        searchRequest.searchType(SearchType.DFS_QUERY_THEN_FETCH);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
         sourceBuilder.query(QueryBuilders.matchPhraseQuery("oriId", oriId));
-        searchRequest.source(sourceBuilder);
-        // Execute search
-        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
-
-        List<BaseDocument> documents = Stream.of(searchResponse.getHits().getHits())
-                .map(searchHint -> {
-                    BaseDocument abandonedMine = objectMapper.convertValue(searchHint.getSourceAsMap(), type);
-                    abandonedMine.setId(searchHint.getId());
-                    return abandonedMine;
-                })
-                .collect(Collectors.toList());
+        List<BaseDocument> documents = this.searchDocuments(indexName, sourceBuilder, type);
 
         return documents.isEmpty() ? null : documents.get(0);
-   }
+    }
+
+    private <T extends BaseDocument> List<BaseDocument> searchDocuments(
+            String indexName, SearchSourceBuilder sourceBuilder, Class<T> type)
+        throws IOException {
+       SearchRequest searchRequest = new SearchRequest(indexName);
+       searchRequest.searchType(SearchType.DFS_QUERY_THEN_FETCH);
+       searchRequest.source(sourceBuilder);
+       // Execute search
+       SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+
+       List<BaseDocument> documents = Stream.of(searchResponse.getHits().getHits())
+               .map(searchHint -> {
+                   BaseDocument document = objectMapper.convertValue(searchHint.getSourceAsMap(), type);
+                   document.setId(searchHint.getId());
+                   return document;
+               })
+               .collect(Collectors.toList());
+       return documents;
+    }
 
     /**
      * Add documents to the Geology Ontario search engine (OpenSearch)
@@ -276,4 +290,24 @@ public class OpenSearchDemoService <T extends BaseDocument> {
         DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(name); //Index name.
         AcknowledgedResponse deleteIndexResponse = client.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
     }
+
+    private Class getIndexClass(String indexName) {
+        IndexType indexType = IndexType.valueOfName(indexName);
+        switch (indexType) {
+            case AbandonedMine:
+                return AbandonedMine.class;
+            case Assessment:
+                return Assessment.class;
+            case DrillHole:
+                return DrillHole.class;
+            case MineralInventory:
+                return MineralInventory.class;
+            case Publication:
+                return Publication.class;
+            default:
+        }
+
+        return null;
+    }
+
 }

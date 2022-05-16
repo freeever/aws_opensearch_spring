@@ -1,6 +1,7 @@
 package com.aws.opensearch.spring.controller;
 
 import com.aws.opensearch.spring.model.AbandonedMine;
+import com.aws.opensearch.spring.model.BaseDocument;
 import com.aws.opensearch.spring.model.DrillHole;
 import com.aws.opensearch.spring.model.GeologyDocumentRequest;
 import com.aws.opensearch.spring.model.ResponseData;
@@ -32,6 +33,14 @@ public class OpenSearchDemoController {
 
     @Autowired
     private OpenSearchDemoService openSearchDemoService;
+
+    @GetMapping("/{indexName}")
+    public ResponseEntity<ResponseData<List<BaseDocument>>> findAllDocuments(@PathVariable String indexName)
+            throws IOException {
+        log.info("Find all documents in index {}", indexName);
+        List<BaseDocument> documents = openSearchDemoService.findAllDocuments(indexName);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseData<>(true, documents));
+    }
 
     /**
      * Search Abandoned Mine by its own ID, which comes from original on prem database

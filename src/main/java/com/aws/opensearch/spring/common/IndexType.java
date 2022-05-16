@@ -16,4 +16,13 @@ public enum IndexType {
     public String getName() {
         return this.name;
     }
+
+    public static IndexType valueOfName(String indexName) {
+        for (IndexType v : values()) {
+            if (v.name.equals(indexName)) {
+                return v;
+            }
+        }
+        return null;
+    }
 }
