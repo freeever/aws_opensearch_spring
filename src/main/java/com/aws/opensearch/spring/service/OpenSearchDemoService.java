@@ -4,9 +4,9 @@ import com.aws.opensearch.spring.common.IndexType;
 import com.aws.opensearch.spring.model.AbandonedMine;
 import com.aws.opensearch.spring.model.Assessment;
 import com.aws.opensearch.spring.model.BaseDocument;
-import com.aws.opensearch.spring.model.DrillHole;
+import com.aws.opensearch.spring.model.drillhole.DrillHole;
 import com.aws.opensearch.spring.model.GeologyDocumentRequest;
-import com.aws.opensearch.spring.model.MineralInventory;
+import com.aws.opensearch.spring.model.mineral.MineralInventory;
 import com.aws.opensearch.spring.model.Publication;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.opensearch.action.admin.indices.alias.Alias;
@@ -243,14 +243,13 @@ public class OpenSearchDemoService <T extends BaseDocument> {
      * @throws IOException
      */
     private int addDocuments(IndexType indexType, List<Map<String, Object>> docMappers) throws IOException {
-        BulkRequest request = new BulkRequest();
-        IndexRequest indexRequest = null;
+        BulkRequest bulkRequest = new BulkRequest();
         for (Map<String, Object> docMapper : docMappers) {
-            indexRequest = new IndexRequest(indexType.getName()).source(docMapper);
-            request.add(indexRequest);
+            IndexRequest indexRequest = new IndexRequest(indexType.getName()).source(docMapper);
+            bulkRequest.add(indexRequest);
         }
 
-        BulkResponse response = client.bulk(request, RequestOptions.DEFAULT);
+        BulkResponse response = client.bulk(bulkRequest, RequestOptions.DEFAULT);
         return response.getItems().length;
     }
 

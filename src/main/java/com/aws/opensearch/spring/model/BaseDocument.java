@@ -1,14 +1,21 @@
 package com.aws.opensearch.spring.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public abstract class BaseDocument {
 
+    @JsonProperty("ori-id")
     private String oriId;
     private String id;
+    @JsonProperty("is-new")
     private Boolean isNew;
+    @JsonProperty("is-update")
     private Boolean isUpdate;
     private String title;
     private String description;
+    @JsonProperty("created-date-time")
     private String createdDateTime;
+    @JsonProperty("updated-date-time")
     private String updatedDateTime;
 
     public String getOriId() {
@@ -27,20 +34,20 @@ public abstract class BaseDocument {
         this.id = id;
     }
 
-    public Boolean getNew() {
+    public Boolean getIsNew() {
         return isNew;
     }
 
-    public void setNew(Boolean aNew) {
-        isNew = aNew;
+    public void setIsNew(Boolean isNew) {
+        isNew = isNew;
     }
 
-    public Boolean getUpdate() {
+    public Boolean getIsUpdate() {
         return isUpdate;
     }
 
-    public void setUpdate(Boolean update) {
-        isUpdate = update;
+    public void setIsUpdate(Boolean isUpdate) {
+        isUpdate = isUpdate;
     }
 
     public String getTitle() {

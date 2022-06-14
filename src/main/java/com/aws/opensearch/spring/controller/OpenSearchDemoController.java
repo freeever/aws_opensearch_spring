@@ -2,7 +2,7 @@ package com.aws.opensearch.spring.controller;
 
 import com.aws.opensearch.spring.model.AbandonedMine;
 import com.aws.opensearch.spring.model.BaseDocument;
-import com.aws.opensearch.spring.model.DrillHole;
+import com.aws.opensearch.spring.model.drillhole.DrillHole;
 import com.aws.opensearch.spring.model.GeologyDocumentRequest;
 import com.aws.opensearch.spring.model.ResponseData;
 import com.aws.opensearch.spring.service.OpenSearchDemoService;

@@ -1,6 +1,8 @@
 package com.aws.opensearch.spring.model;
 
-import javax.validation.constraints.NotEmpty;
+import com.aws.opensearch.spring.model.drillhole.DrillHole;
+import com.aws.opensearch.spring.model.mineral.MineralInventory;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
